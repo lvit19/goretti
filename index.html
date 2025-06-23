@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Vó Goretti, com Amor</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts for a personal touch -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tone.js for generating audio -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+
+    <style>
+        /* Custom styles for fonts and animations */
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #FFF9F2; /* A warm, soft cream color */
+            color: #4A4A4A;
+        }
+        .font-dancing {
+            font-family: 'Dancing Script', cursive;
+        }
+        
+        /* Container for the floating hearts animation */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .heart {
+            position: absolute;
+            bottom: -50px;
+            font-size: 2rem;
+            color: #FFC0CB; /* Soft pink */
+            animation: floatUp 15s linear infinite;
+            opacity: 0;
+        }
+
+        /* Keyframe animation for the hearts */
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+        }
+        
+        /* Animation for sections fading in on scroll */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Helper for responsive video embeds */
+        .aspect-video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            width: 100%;
+        }
+        .aspect-video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Container for the floating hearts background animation -->
+    <div class="hearts-container" id="hearts-container"></div>
+
+    <div class="container mx-auto max-w-2xl p-4 sm:p-6 text-center">
+
+        <!-- Header Section -->
+        <header class="h-screen flex flex-col justify-center items-center text-center px-4">
+            <h1 class="font-dancing text-5xl sm:text-7xl text-pink-500 mb-4">Para minha Vó, Maria Goretti</h1>
+            <p class="text-lg sm:text-xl text-gray-600 mb-8">Com todo o amor do mundo, eu fiz esta pequena homenagem para a senhora.</p>
+            <a href="#amorPuro" class="bg-pink-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-pink-600 transition-transform transform hover:scale-105">
+                Começar a Homenagem
+            </a>
+        </header>
+
+        <main class="space-y-24 mt-16">
+            <!-- Section for "Amor Puro" -->
+            <section id="amorPuro" class="fade-in-section bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                <h2 class="font-dancing text-4xl text-rose-500 mb-4">Um Amor Puro</h2>
+                <div class="text-gray-700 italic text-lg space-y-2">
+                    <p>"Um amor puro... Não sabe a força que tem,"</p>
+                    <p>"te amo mais que tudo, você e mais ninguém..."</p>
+                </div>
+                <p class="mt-6 text-gray-600">Vó, essa música é a tradução da pureza do amor que sinto pela senhora, e que sei que a senhora sente por mim. É o nosso laço.</p>
+                <button data-song="amorPuro" class="play-btn mt-6 bg-rose-500 text-white py-2 px-6 rounded-full hover:bg-rose-600 transition">
+                    Tocar Melodia
+                </button>
+            </section>
+
+            <!-- Section for "Cidadão" -->
+            <section id="cidadao" class="fade-in-section bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                <h2 class="font-dancing text-4xl text-amber-600 mb-4">Cidadão</h2>
+                <div class="text-gray-700 italic text-lg space-y-2">
+                    <p>"Tá vendo aquele colégio, moço? Eu também trabalhei lá..."</p>
+                    <p>"Minha filha inocente, vem pra mim toda contente: Pai, vou me matricular..."</p>
+                    <p>"Mas me diz um cidadão: Criança de pé no chão, aqui não pode estudar."</p>
+                </div>
+                <p class="mt-6 text-gray-600">Essa música me lembra toda a sua dedicação e a do vô. A senhora acordando comigo às 4h da manhã, suas orações, e o vô construindo tantas coisas com o suor do seu rosto debaixo do sol. Tudo para que eu pudesse estudar. Minha gratidão é eterna.</p>
+                <button data-song="cidadao" class="play-btn mt-6 bg-amber-600 text-white py-2 px-6 rounded-full hover:bg-amber-700 transition">
+                    Tocar Melodia
+                </button>
+            </section>
+
+            <!-- Section for "Naquela Mesa" -->
+            <section id="naquelaMesa" class="fade-in-section bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                <h2 class="font-dancing text-4xl text-sky-600 mb-4">Naquela Mesa</h2>
+                <div class="text-gray-700 italic text-lg space-y-2">
+                    <p>"Eu não sabia que doía tanto, uma mesa num canto, uma casa e um jardim..."</p>
+                    <p>"Se eu soubesse o quanto dói a vida, essa dor tão doída não doía assim..."</p>
+                </div>
+                <p class="mt-6 text-gray-600">Eu sei que essa música te emociona e te faz lembrar do seu pai. Ela não poderia faltar, pois o amor e a saudade que a senhora sente fazem parte da sua história e de quem a senhora é. Te amo, vó.</p>
+                <button data-song="naquelaMesa" class="play-btn mt-6 bg-sky-600 text-white py-2 px-6 rounded-full hover:bg-sky-700 transition">
+                    Tocar Melodia
+                </button>
+            </section>
+        </main>
+
+        <!-- Footer with embedded YouTube videos -->
+        <footer class="mt-24 pt-10 border-t border-gray-200">
+            <h3 class="text-2xl font-bold text-gray-700 mb-4">Músicas Completas</h3>
+            <p class="text-gray-600 mb-10">Para a senhora ouvir quando quiser.</p>
+
+            <div class="space-y-12">
+                <!-- Amor Puro Video -->
+                <div>
+                    <h4 class="font-dancing text-3xl text-rose-500 mb-3">Amor Puro</h4>
+                    <div class="aspect-video-container rounded-lg overflow-hidden shadow-xl">
+                        <iframe src="https://www.youtube.com/embed/kXRdsh4-8yU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- Cidadão Video -->
+                <div>
+                    <h4 class="font-dancing text-3xl text-amber-600 mb-3">Cidadão</h4>
+                    <div class="aspect-video-container rounded-lg overflow-hidden shadow-xl">
+                        <iframe src="https://www.youtube.com/embed/u4zS3-OzLhM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- Naquela Mesa Video -->
+                <div>
+                    <h4 class="font-dancing text-3xl text-sky-600 mb-3">Naquela Mesa</h4>
+                    <div class="aspect-video-container rounded-lg overflow-hidden shadow-xl">
+                        <iframe src="https://www.youtube.com/embed/Yp6zBv3D7xU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <p class="mt-16 pt-8 border-t border-gray-200 text-gray-500">Feito com todo o meu amor, para a melhor avó do mundo.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Floating Hearts Animation ---
+            const heartsContainer = document.getElementById('hearts-container');
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = `${Math.random() * 100}vw`;
+                heart.style.animationDuration = `${Math.random() * 8 + 7}s`; // 7s to 15s duration
+                heart.style.opacity = Math.random() * 0.5 + 0.2; // 0.2 to 0.7 opacity
+                heart.innerHTML = '&#x2665;'; // Heart symbol
+                heartsContainer.appendChild(heart);
+
+                // Remove heart from DOM after animation finishes
+                setTimeout(() => {
+                    heart.remove();
+                }, 15000);
+            }
+            setInterval(createHeart, 800);
+
+            // --- Scroll Fade-in Animation ---
+            const sections = document.querySelectorAll('.fade-in-section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1 // Trigger when 10% of the element is visible
+            });
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // --- Tone.js Music Player ---
+            let synth;
+            let currentSong = null;
+
+            // Define the melodies for each song
+            const melodies = {
+                amorPuro: [
+                    ['G4', '8n'], ['A4', '8n'], ['B4', '4n'], ['A4', '8n'], ['G4', '8n'],
+                    ['E5', '4n'], ['D5', '4n'], ['C5', '2n']
+                ],
+                cidadao: [
+                    ['E4', '4n'], ['E4', '8n'], ['G4', '8n'], ['A4', '4n'], ['G4', '4n'],
+                    ['E4', '2n'], ['C4', '4n'], ['D4', '4n'], ['E4', '2n']
+                ],
+                naquelaMesa: [
+                    ['A3', '2n'], ['C4', '4n'], ['E4', '4n'], ['D4', '2n'], ['B3', '4n'],
+                    ['G3', '2n.'], ['A3', '4n'], ['B3', '2n'], ['C4', '2n']
+                ]
+            };
+
+            // Function to play a sequence of notes
+            function playMelody(songName) {
+                if (!synth) {
+                   // Use a gentle synth sound
+                   synth = new Tone.Synth({
+                        oscillator: { type: 'sine' },
+                        envelope: { attack: 0.05, decay: 0.2, sustain: 0.3, release: 1 }
+                    }).toDestination();
+                }
+
+                // Stop any currently playing melody
+                Tone.Transport.stop();
+                Tone.Transport.cancel(0);
+                
+                // If clicking the same button, it acts as a stop button
+                if (currentSong === songName) {
+                    currentSong = null;
+                    return; 
+                }
+                
+                currentSong = songName;
+                
+                const melody = melodies[songName];
+                
+                let time = 0;
+                melody.forEach(note => {
+                    synth.triggerAttackRelease(note[0], note[1], `+${time}`);
+                    time += Tone.Time(note[1]).toSeconds();
+                });
+                
+                // Reset currentSong after melody finishes
+                Tone.Transport.scheduleOnce(() => {
+                    currentSong = null;
+                }, `+${time}`);
+
+                Tone.Transport.start();
+            }
+
+            // Add event listeners to all play buttons
+            const playButtons = document.querySelectorAll('.play-btn');
+            playButtons.forEach(button => {
+                button.addEventListener('click', async () => {
+                    // Tone.js requires a user interaction to start the audio context
+                    await Tone.start();
+                    const song = button.dataset.song;
+                    playMelody(song);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
