@@ -13,9 +13,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     
-    <!-- Tone.js for generating audio -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
-
     <style>
         /* Custom styles for fonts and animations */
         body {
@@ -85,12 +82,24 @@
             width: 100%;
             height: 100%;
         }
+
+        /* Hides the youtube player used for snippets */
+        .hidden-player {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+        }
     </style>
 </head>
 <body class="antialiased">
 
     <!-- Container for the floating hearts background animation -->
     <div class="hearts-container" id="hearts-container"></div>
+    
+    <!-- Hidden container for the YouTube player that will play the audio snippets -->
+    <div id="player" class="hidden-player"></div>
 
     <div class="container mx-auto max-w-2xl p-4 sm:p-6 text-center">
 
@@ -108,12 +117,14 @@
             <section id="amorPuro" class="fade-in-section bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
                 <h2 class="font-dancing text-4xl text-rose-500 mb-4">Um Amor Puro</h2>
                 <div class="text-gray-700 italic text-lg space-y-2">
-                    <p>"Um amor puro... Não sabe a força que tem,"</p>
-                    <p>"te amo mais que tudo, você e mais ninguém..."</p>
+                    <p>"O que há dentro do meu coração"</p>
+                    <p>"Eu tenho guardado pra te dar"</p>
+                    <p>"E todas as horas que o tempo tem pra me conceder"</p>
+                    <p>"São tuas, até morrer..."</p>
                 </div>
                 <p class="mt-6 text-gray-600">Vó, essa música é a tradução da pureza do amor que sinto pela senhora, e que sei que a senhora sente por mim. É o nosso laço.</p>
-                <button data-song="amorPuro" class="play-btn mt-6 bg-rose-500 text-white py-2 px-6 rounded-full hover:bg-rose-600 transition">
-                    Tocar Melodia
+                <button data-video-id="hh9WgYHRuhU" data-start="176" data-end="206" class="play-btn mt-6 bg-rose-500 text-white py-2 px-6 rounded-full hover:bg-rose-600 transition">
+                    Tocar Trecho
                 </button>
             </section>
 
@@ -126,8 +137,8 @@
                     <p>"Mas me diz um cidadão: Criança de pé no chão, aqui não pode estudar."</p>
                 </div>
                 <p class="mt-6 text-gray-600">Essa música me lembra toda a sua dedicação e a do vô. A senhora acordando comigo às 4h da manhã, suas orações, e o vô construindo tantas coisas com o suor do seu rosto debaixo do sol. Tudo para que eu pudesse estudar. Minha gratidão é eterna.</p>
-                <button data-song="cidadao" class="play-btn mt-6 bg-amber-600 text-white py-2 px-6 rounded-full hover:bg-amber-700 transition">
-                    Tocar Melodia
+                <button data-video-id="RFtw0_qNl54" data-start="72" data-end="105" class="play-btn mt-6 bg-amber-600 text-white py-2 px-6 rounded-full hover:bg-amber-700 transition">
+                    Tocar Trecho
                 </button>
             </section>
 
@@ -139,8 +150,8 @@
                     <p>"Se eu soubesse o quanto dói a vida, essa dor tão doída não doía assim..."</p>
                 </div>
                 <p class="mt-6 text-gray-600">Eu sei que essa música te emociona e te faz lembrar do seu pai. Ela não poderia faltar, pois o amor e a saudade que a senhora sente fazem parte da sua história e de quem a senhora é. Te amo, vó.</p>
-                <button data-song="naquelaMesa" class="play-btn mt-6 bg-sky-600 text-white py-2 px-6 rounded-full hover:bg-sky-700 transition">
-                    Tocar Melodia
+                <button data-video-id="ePW8z08IfdQ" data-start="41" data-end="73" class="play-btn mt-6 bg-sky-600 text-white py-2 px-6 rounded-full hover:bg-sky-700 transition">
+                    Tocar Trecho
                 </button>
             </section>
         </main>
@@ -182,26 +193,91 @@
     </div>
 
     <script>
+        // --- YouTube Player API setup ---
+        // This code loads the IFrame Player API code asynchronously.
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        let player;
+        let timeoutId = null;
+        let currentlyPlayingButton = null;
+
+        // This function creates an <iframe> (and YouTube player) after the API code downloads.
+        // It's called automatically by the YouTube API.
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                // Player options can be set here if needed
+            });
+        }
+
+        // Function to play a video snippet
+        function playSnippet(button) {
+            const videoId = button.dataset.videoId;
+            const startSeconds = parseInt(button.dataset.start, 10);
+            const endSeconds = parseInt(button.dataset.end, 10);
+            
+            if (!player || typeof player.loadVideoById !== 'function') {
+                console.error("YouTube Player is not ready yet.");
+                return;
+            }
+
+            // If a snippet is playing, stop it and reset its button
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+                if (currentlyPlayingButton) {
+                    currentlyPlayingButton.textContent = 'Tocar Trecho';
+                }
+            }
+            player.stopVideo();
+
+            // If the clicked button was the one playing, we just stop it.
+            if (currentlyPlayingButton === button) {
+                currentlyPlayingButton = null;
+                return;
+            }
+
+            // Set up the new snippet to play
+            currentlyPlayingButton = button;
+            button.textContent = 'Tocando...';
+            
+            player.loadVideoById({
+                'videoId': videoId,
+                'startSeconds': startSeconds
+            });
+            player.playVideo();
+
+            const duration = (endSeconds - startSeconds) * 1000;
+            timeoutId = setTimeout(() => {
+                if (player && typeof player.stopVideo === 'function') {
+                    player.stopVideo();
+                    button.textContent = 'Tocar Trecho';
+                    currentlyPlayingButton = null; // Clear the state
+                }
+            }, duration);
+        }
+
+        // --- Animations and Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Floating Hearts Animation ---
+            // Floating Hearts Animation
             const heartsContainer = document.getElementById('hearts-container');
             function createHeart() {
                 const heart = document.createElement('div');
                 heart.classList.add('heart');
                 heart.style.left = `${Math.random() * 100}vw`;
-                heart.style.animationDuration = `${Math.random() * 8 + 7}s`; // 7s to 15s duration
-                heart.style.opacity = Math.random() * 0.5 + 0.2; // 0.2 to 0.7 opacity
-                heart.innerHTML = '&#x2665;'; // Heart symbol
+                heart.style.animationDuration = `${Math.random() * 8 + 7}s`;
+                heart.style.opacity = Math.random() * 0.5 + 0.2;
+                heart.innerHTML = '&#x2665;';
                 heartsContainer.appendChild(heart);
 
-                // Remove heart from DOM after animation finishes
                 setTimeout(() => {
                     heart.remove();
                 }, 15000);
             }
             setInterval(createHeart, 800);
 
-            // --- Scroll Fade-in Animation ---
+            // Scroll Fade-in Animation
             const sections = document.querySelectorAll('.fade-in-section');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -209,79 +285,14 @@
                         entry.target.classList.add('visible');
                     }
                 });
-            }, {
-                threshold: 0.1 // Trigger when 10% of the element is visible
-            });
-            sections.forEach(section => {
-                observer.observe(section);
-            });
+            }, { threshold: 0.1 });
+            sections.forEach(section => observer.observe(section));
 
-            // --- Tone.js Music Player ---
-            let synth;
-            let currentSong = null;
-
-            // Define the melodies for each song
-            const melodies = {
-                amorPuro: [
-                    ['G4', '8n'], ['A4', '8n'], ['B4', '4n'], ['A4', '8n'], ['G4', '8n'],
-                    ['E5', '4n'], ['D5', '4n'], ['C5', '2n']
-                ],
-                cidadao: [
-                    ['E4', '4n'], ['E4', '8n'], ['G4', '8n'], ['A4', '4n'], ['G4', '4n'],
-                    ['E4', '2n'], ['C4', '4n'], ['D4', '4n'], ['E4', '2n']
-                ],
-                naquelaMesa: [
-                    ['A3', '2n'], ['C4', '4n'], ['E4', '4n'], ['D4', '2n'], ['B3', '4n'],
-                    ['G3', '2n.'], ['A3', '4n'], ['B3', '2n'], ['C4', '2n']
-                ]
-            };
-
-            // Function to play a sequence of notes
-            function playMelody(songName) {
-                if (!synth) {
-                   // Use a gentle synth sound
-                   synth = new Tone.Synth({
-                        oscillator: { type: 'sine' },
-                        envelope: { attack: 0.05, decay: 0.2, sustain: 0.3, release: 1 }
-                    }).toDestination();
-                }
-
-                // Stop any currently playing melody
-                Tone.Transport.stop();
-                Tone.Transport.cancel(0);
-                
-                // If clicking the same button, it acts as a stop button
-                if (currentSong === songName) {
-                    currentSong = null;
-                    return; 
-                }
-                
-                currentSong = songName;
-                
-                const melody = melodies[songName];
-                
-                let time = 0;
-                melody.forEach(note => {
-                    synth.triggerAttackRelease(note[0], note[1], `+${time}`);
-                    time += Tone.Time(note[1]).toSeconds();
-                });
-                
-                // Reset currentSong after melody finishes
-                Tone.Transport.scheduleOnce(() => {
-                    currentSong = null;
-                }, `+${time}`);
-
-                Tone.Transport.start();
-            }
-
-            // Add event listeners to all play buttons
+            // Add click listeners to all play buttons
             const playButtons = document.querySelectorAll('.play-btn');
             playButtons.forEach(button => {
-                button.addEventListener('click', async () => {
-                    // Tone.js requires a user interaction to start the audio context
-                    await Tone.start();
-                    const song = button.dataset.song;
-                    playMelody(song);
+                button.addEventListener('click', () => {
+                    playSnippet(button);
                 });
             });
         });
